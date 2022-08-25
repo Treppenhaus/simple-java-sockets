@@ -43,4 +43,62 @@ public static void main(String[] args) {
     });
     server.startListening();
 }
+
 ```
+---
+
+### another example
+
+this is a counting example:
+the client sends "1" (string) to the server, which adds 1 and sends it back.
+so the server responds with 2, client with 3, server with 4 etc etc.
+below is the example code
+
+#### server code
+```java
+public static void main(String[] args) {
+        SocketServer server = new SocketServer(6666);
+        server.addHandler(new SocketHandler() {
+            @Override
+            public String getKey() {
+                return "count";
+            }
+
+            @Override
+            public void handle(DataInputStream inputStream, DataOutputStream outputStream) throws IOException {
+                // always wait for number, then send 1 higher back to client
+                while(true) {
+                    String response = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                    System.out.println("response: " + response);
+                    int number = Integer.parseInt(response);
+                    outputStream.write((++number + "\n").getBytes());
+                }
+            }
+        });
+        server.startListening();
+    }
+```
+---
+#### client code
+```java
+public static void main(String[] args) {
+    SocketClient client = new SocketClient("localhost", 6666);
+    client.send(new ServerTask() {
+        @Override
+        public String getKey() {
+            return "count";
+        }
+        @Override
+        public void connection(DataInputStream inputStream, DataOutputStream outputStream) throws IOException {
+            outputStream.write((1 + "\n").getBytes()); // starting at 1
+            while(true) {
+                String response = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                System.out.println("response: " + response);
+                int number = Integer.parseInt(response);
+                outputStream.write((++number + "\n").getBytes()); // respond with response + 1 (++number)
+            }
+        }
+    });
+}
+```
+> NOTE: using while(true) is usually a bad idea
