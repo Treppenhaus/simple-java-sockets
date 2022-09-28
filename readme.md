@@ -1,5 +1,15 @@
 ### simple java server- and clientsocket
 
+#### maven:
+```xml
+<dependency>
+  <groupId>eu.treppi.javasockets</groupId>
+  <artifactId>simple-java-sockets</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+
 examples below
 
 ---
