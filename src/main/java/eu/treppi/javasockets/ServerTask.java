@@ -1,4 +1,4 @@
-package eu.treppi.socketclient;
+package eu.treppi.javasockets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
